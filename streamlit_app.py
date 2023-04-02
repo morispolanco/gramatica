@@ -51,7 +51,7 @@ def dividir_texto(texto, max_tokens):
     return fragmentos
 
 def corregir_gramatica_y_estilo(texto_ensayo):
-    max_tokens_por_fragmento = 3000
+    max_tokens_por_fragmento = 4000
     fragmentos = dividir_texto(texto_ensayo, max_tokens_por_fragmento)
     correcciones = []
 
