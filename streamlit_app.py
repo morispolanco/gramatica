@@ -81,13 +81,18 @@ def corregir_gramatica_y_estilo(texto_ensayo):
 st.title("Corrector de Gramática y Estilo")
 archivo_subido = st.file_uploader("Sube tu ensayo", type=["txt", "docx", "pdf"])
 
+# ...
+
 if archivo_subido is not None:
     texto_ensayo = leer_archivo(archivo_subido)
 
-    if st.button("Corregir Gramática y Estilo"):
+    if st.button("Corregir Gramática y Estilo", key="corregir_button"):
         ensayo_corregido = corregir_gramatica_y_estilo(texto_ensayo)
         st.write("Ensayo corregido:")
         st.write(ensayo_corregido)
+
+        # ...
+
 
     if st.button("Corregir Gramática y Estilo"):
         ensayo_corregido = corregir_gramatica_y_estilo(texto_ensayo)
