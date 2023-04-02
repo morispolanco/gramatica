@@ -28,9 +28,6 @@ if archivo_subido is not None:
     
     texto_ensayo = archivo_subido.read().decode(codificacion)
 
-    st.write("Contenido del ensayo:")
-    st.write(texto_ensayo)
-
     if st.button("Corregir Gramática y Estilo"):
         ensayo_corregido = corregir_gramatica_y_estilo(texto_ensayo)
         st.write("Ensayo corregido:")
