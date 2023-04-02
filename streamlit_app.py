@@ -58,7 +58,7 @@ def corregir_gramatica_y_estilo(texto_ensayo):
     for fragmento in fragmentos:
         prompt = f"Por favor, corrige la gramática y el estilo del siguiente ensayo:\n\n{fragmento}\n\nEnsayo corregido:"
         response = openai.Completion.create(
-            engine="gpt-3.5-turbo",
+            engine="text-davinci-003",
             prompt=prompt,
             max_tokens=150,
             n=1,
