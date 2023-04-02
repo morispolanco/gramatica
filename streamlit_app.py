@@ -4,6 +4,7 @@ import openai
 import chardet
 import docx
 import PyPDF2
+from io import BytesIO
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
@@ -27,14 +28,6 @@ def leer_archivo(archivo_subido):
             texto += pagina.extractText()
 
     return texto
-
-    if archivo_subido is not None:
-        texto_ensayo = leer_archivo(archivo_subido)
-
-    if st.button("Corregir Gramática y Estilo"):
-        ensayo_corregido = corregir_gramatica_y_estilo(texto_ensayo)
-        st.write("Ensayo corregido:")
-        st.write(ensayo_corregido)
 
 def dividir_texto(texto, max_tokens):
     palabras = texto.split()
@@ -78,23 +71,40 @@ def corregir_gramatica_y_estilo(texto_ensayo):
     ensayo_corregido = ' '.join(correcciones)
     return ensayo_corregido
 
+def guardar_ensayo_corregido(extension, ensayo_corregido):
+    if extension == "txt":
+        archivo_corregido = BytesIO()
+        archivo_corregido.write(ensayo_corregido.encode("utf-8"))
+        archivo_corregido.seek(0)
+    elif extension == "docx":
+        archivo_corregido = BytesIO()
+        doc = docx.Document()
+        doc.add_paragraph(ensayo_corregido)
+        doc.save(archivo_corregido)
+        archivo_corregido.seek(0)
+    elif extension == "pdf":
+        # (Agrega aquí la lógica de conversión de texto a PDF)
+        # ...
+        pass
+    return archivo_corregido
+
 st.title("Corrector de Gramática y Estilo")
 archivo_subido = st.file_uploader("Sube tu ensayo", type=["txt", "docx", "pdf"])
 
 if archivo_subido is not None:
+    extension = archivo_subido.name.split(".")[-1].lower()
     texto_ensayo = leer_archivo(archivo_subido)
 
     if st.button("Corregir Gramática y Estilo", key="corregir_button"):
         ensayo_corregido = corregir_gramatica_y_estilo(texto_ensayo)
-
-        # Crear un archivo de texto con el ensayo corregido
+        archivo_corregido = guardar_ensayo_corregido(extension, ensayo_corregido)
         nombre_archivo_corregido = f"corregido_{archivo_subido.name}"
-        with open(nombre_archivo_corregido, "w", encoding="utf-8") as archivo_corregido:
-            archivo_corregido.write(ensayo_corregido)
 
-        # Mostrar un botón para descargar el archivo de texto corregido
-        with open(nombre_archivo_corregido, "rb") as archivo_corregido:
-            st.download_button("Descargar ensayo corregido", archivo_corregido.read(), file_name=nombre_archivo_corregido, mime="text/plain")
+        if extension == "txt":
+            mime_type = "text/plain"
+        elif extension == "docx":
+            mime_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        elif extension == "pdf":
+            mime_type = "application/pdf"
 
-        # Eliminar el archivo de texto corregido del servidor
-        os.remove(nombre_archivo_corregido)
+        st.download_button("Descargar ensayo corregido", archivo_corregido.getvalue(), file_name=nombre_archivo_corregido, mime=mime_type)
