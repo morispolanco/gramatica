@@ -47,9 +47,9 @@ def corregir_gramatica_y_estilo(texto_ensayo):
     ensayo_corregido = ' '.join(correcciones)
     return ensayo_corregido
 
-        st.download_button(
-            label="Descargar Ensayo Corregido",
-            data=open("ensayo_corregido.txt", "rb"),
-            file_name="ensayo_corregido.txt",
-            mime="text/plain",
-        )
+    st.download_button(
+        label="Descargar Ensayo Corregido",
+        data=open("ensayo_corregido.txt", "rb"),
+        file_name="ensayo_corregido.txt",
+        mime="text/plain",
+    )
