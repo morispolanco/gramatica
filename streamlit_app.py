@@ -86,7 +86,15 @@ if archivo_subido is not None:
 
     if st.button("Corregir Gramática y Estilo", key="corregir_button"):
         ensayo_corregido = corregir_gramatica_y_estilo(texto_ensayo)
-        st.write("Ensayo corregido:")
-        st.write(ensayo_corregido)
 
-        # ...
+        # Crear un archivo de texto con el ensayo corregido
+        nombre_archivo_corregido = f"corregido_{archivo_subido.name}"
+        with open(nombre_archivo_corregido, "w", encoding="utf-8") as archivo_corregido:
+            archivo_corregido.write(ensayo_corregido)
+
+        # Mostrar un botón para descargar el archivo de texto corregido
+        with open(nombre_archivo_corregido, "rb") as archivo_corregido:
+            st.download_button("Descargar ensayo corregido", archivo_corregido.read(), file_name=nombre_archivo_corregido, mime="text/plain")
+
+        # Eliminar el archivo de texto corregido del servidor
+        os.remove(nombre_archivo_corregido)
