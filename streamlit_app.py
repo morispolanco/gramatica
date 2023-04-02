@@ -29,7 +29,7 @@ def leer_archivo(archivo_subido):
     return texto
 
     if archivo_subido is not None:
-    texto_ensayo = leer_archivo(archivo_subido)
+        texto_ensayo = leer_archivo(archivo_subido)
 
     if st.button("Corregir Gramática y Estilo"):
         ensayo_corregido = corregir_gramatica_y_estilo(texto_ensayo)
