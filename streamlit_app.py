@@ -2,8 +2,37 @@ import os
 import streamlit as st
 import openai
 import chardet
+import docx
+import PyPDF2
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
+
+def leer_archivo(archivo_subido):
+    extension = archivo_subido.name.split('.')[-1].lower()
+    texto = ""
+
+    if extension == 'txt':
+        deteccion = chardet.detect(archivo_subido.read())
+        codificacion = deteccion['encoding'] or 'latin-1'
+        archivo_subido.seek(0)
+        texto = archivo_subido.read().decode(codificacion)
+    elif extension == 'docx':
+        documento = docx.Document(archivo_subido)
+        for p in documento.paragraphs:
+            texto += p.text + "\n"
+    elif extension == 'pdf':
+        lector_pdf = PyPDF2.PdfFileReader(archivo_subido)
+        for i in range(lector_pdf.getNumPages()):
+            pagina = lector_pdf.getPage(i)
+            texto += pagina.extractText()
+
+    return textoif archivo_subido is not None:
+    texto_ensayo = leer_archivo(archivo_subido)
+
+    if st.button("Corregir Gramática y Estilo"):
+        ensayo_corregido = corregir_gramatica_y_estilo(texto_ensayo)
+        st.write("Ensayo corregido:")
+        st.write(ensayo_corregido)
 
 def dividir_texto(texto, max_tokens):
     palabras = texto.split()
@@ -51,11 +80,12 @@ st.title("Corrector de Gramática y Estilo")
 archivo_subido = st.file_uploader("Sube tu ensayo", type=["txt", "docx", "pdf"])
 
 if archivo_subido is not None:
-    deteccion = chardet.detect(archivo_subido.read())
-    codificacion = deteccion['encoding'] or 'latin-1'
-    archivo_subido.seek(0)
-    
-    texto_ensayo = archivo_subido.read().decode(codificacion)
+    texto_ensayo = leer_archivo(archivo_subido)
+
+    if st.button("Corregir Gramática y Estilo"):
+        ensayo_corregido = corregir_gramatica_y_estilo(texto_ensayo)
+        st.write("Ensayo corregido:")
+        st.write(ensayo_corregido)
 
     if st.button("Corregir Gramática y Estilo"):
         ensayo_corregido = corregir_gramatica_y_estilo(texto_ensayo)
