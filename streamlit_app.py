@@ -26,7 +26,9 @@ def leer_archivo(archivo_subido):
             pagina = lector_pdf.getPage(i)
             texto += pagina.extractText()
 
-    return textoif archivo_subido is not None:
+    return texto
+
+    if archivo_subido is not None:
     texto_ensayo = leer_archivo(archivo_subido)
 
     if st.button("Corregir Gramática y Estilo"):
